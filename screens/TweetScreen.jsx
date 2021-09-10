@@ -3,11 +3,15 @@ import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { Entypo } from '@expo/vector-icons';
 import { EvilIcons } from '@expo/vector-icons';
 
-export default function TweetScreen() {
+export default function TweetScreen({ navigation }) {
+  function gotoProfile() {
+    navigation.navigate('Profile Screen');
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.profileContainer}>
-        <TouchableOpacity style={styles.flexRow}>
+        <TouchableOpacity style={styles.flexRow} onPress={() => gotoProfile()}>
           <Image
             style={styles.avatar}
             source={{
