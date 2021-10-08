@@ -17,6 +17,7 @@ import NotificationsScreen from './screens/NotificationsScreen';
 import { AuthContext, AuthProvider } from './context/AuthProvider';
 import LoginScreen from './screens/Auth/LoginScreen';
 import RegisterScreen from './screens/Auth/RegisterScreen';
+import * as SecureStore from 'expo-secure-store';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -116,9 +117,18 @@ export default function App() {
   useEffect(() => {
     // check if user is logged in or not.
     // Check SecureStore for the user object/token
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 2000);
+
+    SecureStore.getItemAsync('user')
+      .then(userString => {
+        if (userString) {
+          setUser(JSON.parse(userString));
+        }
+        setIsLoading(false);
+      })
+      .catch(err => {
+        console.log(err);
+        setIsLoading(false);
+      });
   }, []);
 
   if (isLoading) {
