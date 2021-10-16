@@ -10,6 +10,8 @@ import {
   Image,
 } from 'react-native';
 
+import axiosConfig from '../../helpers/axiosConfig';
+
 export default function RegisterScreen({ navigation }) {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -20,7 +22,33 @@ export default function RegisterScreen({ navigation }) {
   const [error, setError] = useState(null);
 
   function register(email, username, password, confirmPassword) {
-    Alert.alert('Register Logic here');
+    if (name.length < 1) {
+      Alert.alert('Please enter a name');
+      return;
+    }
+
+    setIsLoading(true);
+    axiosConfig
+      .post('/register', {
+        name,
+        email,
+        username,
+        password,
+        password_confirmation: confirmPassword,
+      })
+      .then(response => {
+        Alert.alert('User created! Please login.');
+        navigation.navigate('Login Screen');
+
+        setIsLoading(false);
+        setError(null);
+      })
+      .catch(error => {
+        console.log(error.response);
+        const key = Object.keys(error.response.data.errors)[0];
+        setError(error.response.data.errors[key][0]);
+        setIsLoading(false);
+      });
   }
 
   return (
