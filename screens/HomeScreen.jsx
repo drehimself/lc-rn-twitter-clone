@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import {
   View,
   Text,
@@ -19,6 +19,7 @@ import locale from 'date-fns/locale/en-US';
 import formatDistance from '../helpers/formatDistanceCustom';
 
 import RenderItem from '../components/RenderItem';
+import { AuthContext } from '../context/AuthProvider';
 
 export default function HomeScreen({ route, navigation }) {
   const [data, setData] = useState([]);
@@ -27,6 +28,7 @@ export default function HomeScreen({ route, navigation }) {
   const [page, setPage] = useState(1);
   const [isAtEndOfScrolling, setIsAtEndOfScrolling] = useState(false);
   const flatListRef = useRef();
+  const { user } = useContext(AuthContext);
 
   useEffect(() => {
     getAllTweets();
@@ -46,6 +48,10 @@ export default function HomeScreen({ route, navigation }) {
     setIsAtEndOfScrolling(false);
     setIsRefreshing(false);
 
+    axiosConfig.defaults.headers.common[
+      'Authorization'
+    ] = `Bearer ${user.token}`;
+
     axiosConfig
       .get(`/tweets`)
       .then(response => {
@@ -61,6 +67,10 @@ export default function HomeScreen({ route, navigation }) {
   }
 
   function getAllTweets() {
+    axiosConfig.defaults.headers.common[
+      'Authorization'
+    ] = `Bearer ${user.token}`;
+
     axiosConfig
       .get(`/tweets?page=${page}`)
       .then(response => {
