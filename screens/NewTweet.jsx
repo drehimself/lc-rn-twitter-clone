@@ -73,7 +73,7 @@ export default function NewTweet({ navigation }) {
         <Image
           style={styles.avatar}
           source={{
-            uri: 'https://reactnative.dev/img/tiny_logo.png',
+            uri: user.avatar,
           }}
         />
         <TextInput
